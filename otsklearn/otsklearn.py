@@ -189,7 +189,9 @@ class Kriging(BaseEstimator, RegressorMixin):
         if (len(np.shape(X)) != 2):
             raise ValueError("X has incorrect shape.")
         input_dimension = len(X[1])
-        if (len(np.shape(y)) != 2):
+        if len(np.shape(y)) == 1:  # For sklearn.multioutput.MultiOutputRegressor
+            y = np.expand_dims(y, axis=1)
+        if len(np.shape(y)) != 2:
             raise ValueError("y has incorrect shape.")
 
         if type(self.kernel) is str:
