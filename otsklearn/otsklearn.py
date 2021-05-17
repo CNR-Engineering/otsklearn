@@ -144,7 +144,7 @@ class FunctionalChaos(BaseEstimator, RegressorMixin):
 class Kriging(BaseEstimator, RegressorMixin):
 
     def __init__(self, kernel='SquaredExponential', basis='Constant',
-                 n_iter_opt = 100, normalize_data = True, linalg_meth = "LAPACK"):
+                 n_iter_opt = 100, linalg_meth = "LAPACK"):
         """Kriging estimator.
 
         Parameters
@@ -155,8 +155,6 @@ class Kriging(BaseEstimator, RegressorMixin):
             Basis type
         n_iter_opt : int
             Maximal number of optimization iterations
-        normalize_data : bool
-            Tells whether input data should be normalized or not.
         linalg_meth : str
             Select the linear algebra
             Values are LAPACK or HMAT
@@ -165,7 +163,6 @@ class Kriging(BaseEstimator, RegressorMixin):
         self.kernel = kernel
         self.basis = basis
         self.n_iter_opt = n_iter_opt
-        self.normalize_data = normalize_data
         self.linalg_meth = linalg_meth
 
     def fit(self, X, y, **fit_params):
@@ -206,7 +203,7 @@ class Kriging(BaseEstimator, RegressorMixin):
         ot.ResourceMap.SetAsString(
             "KrigingAlgorithm-LinearAlgebra",  str(self.linalg_meth).upper())
         algo = ot.KrigingAlgorithm(
-            X, y, covarianceModel, basisCollection, self.normalize_data)
+            X, y, covarianceModel, basisCollection)
         if self.n_iter_opt:
             opt_algo = algo.getOptimizationAlgorithm()
             opt_algo.setMaximumIterationNumber(self.n_iter_opt)
